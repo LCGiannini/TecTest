@@ -14,3 +14,5 @@ newman run Garbarino.postman_collection.json -e Production.postman_environment.j
 ### Variables en los enviorment:
 - **host:** Que contiene el valor del host de prod/qa
 - **api_key:** Que contiene el valor de las API de prod/qa
+
+#### Luciano Giannini
