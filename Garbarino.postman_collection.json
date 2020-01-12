@@ -1,0 +1,119 @@
+{
+	"info": {
+		"_postman_id": "c410bbca-e8e4-4aff-a7f5-655053ed8939",
+		"name": "Garbarino",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Books",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "93e80922-264e-42b2-8b5a-96a895fafc9e",
+						"exec": [
+							"var books = pm.response.json();",
+							"books.forEach(function(book) {",
+							"    pm.test(\"Testeo que el libro de nombre: \"+book.Title+\", tenga una ID que sea numerico\", function () {",
+							"        pm.expect(book.ID).to.be.a(\"number\");",
+							"    });",
+							"    pm.sendRequest(\"http://fakerestapi.azurewebsites.net/authors/books/\"+book.ID, function (err, response) {",
+							"        var authors = response.json();",
+							"        authors.forEach(function(author) {",
+							"            pm.test(\"Valido autor: \"+author.FirstName+\", con libro: \"+book.Title, function () {",
+							"                pm.expect(book.ID).to.be.eql(author.IDBook);",
+							"               ",
+							"            });",
+							"            console.log(\"Libro: \"+book.Title+\". Autor: \"+author.FirstName+' '+author.LastName);",
+							"        });",
+							"    });",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}/api/Books?api_key={{api_key}}",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"Books"
+					],
+					"query": [
+						{
+							"key": "api_key",
+							"value": "{{api_key}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Authors",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "12ffbff0-ed50-4290-9677-af178b90fa59",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Content-Type is present\", function () {",
+							"    pm.response.to.have.header(\"Content-Type\");",
+							"});",
+							"var authors = pm.response.json();",
+							"authors.forEach(function(author) {",
+							"    pm.test(\"Testeo que el primer nombre del autor: \"+author.FirstName+\", sea string\", function () {",
+							"        pm.expect(author.FirstName).to.be.a(\"string\");",
+							"    });",
+							"    pm.test(\"Testeo que el apellido del autor: \"+author.LastName+\", sea string\", function () {",
+							"        pm.expect(author.LastName).to.be.a(\"string\");",
+							"    });",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://{{host}}/api/Authors?api_key={{api_key}}",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"Authors"
+					],
+					"query": [
+						{
+							"key": "api_key",
+							"value": "{{api_key}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
